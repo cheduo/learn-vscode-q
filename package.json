@@ -1,10 +1,10 @@
 {
 	"name": "learn-vscode-q",
-	"displayName": "kdb+/q ext",
+	"displayName": "connect-kdb-q-dev",
 	"description": "q language support for Visual Studio Code",
 	"version": "0.0.1",
 	"homepage": "https://github.com/cheduo/learn-vscode-q",
-	"publisher": "jshinonome",
+	"publisher": "chenduo",
 	"license": "MIT",
 	"engines": {
 		"vscode": "^1.46.0"
@@ -15,16 +15,14 @@
 		"Formatters"
 	],
 	"maintainers": [
-		"Jo Shinonome <jshinonome@gmail.com>"
+		""
 	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/cheduo/learn-vscode-q.git"
 	},
 	"keywords": [
-		"kdb+",
-		"kdb",
-		"q"
+		""
 	],
 	"icon": "icon.png",
 	"main": "./out/extension.js",
@@ -98,7 +96,7 @@
 			{
 				"command": "qservers.refreshEntry",
 				"title": "Refresh q Server List",
-				"category": "kdb+/q ext",
+				"category": "connect-kdb-q-dev",
 				"icon": {
 					"light": "resources/light/refresh.svg",
 					"dark": "resources/dark/refresh.svg"
@@ -107,7 +105,7 @@
 			{
 				"command": "qservers.addEntry",
 				"title": "Add q Server",
-				"category": "kdb+/q ext",
+				"category": "connect-kdb-q-dev",
 				"icon": {
 					"light": "resources/light/add.svg",
 					"dark": "resources/dark/add.svg"
@@ -116,7 +114,7 @@
 			{
 				"command": "qservers.editEntry",
 				"title": "Edit q Server",
-				"category": "kdb+/q ext",
+				"category": "connect-kdb-q-dev",
 				"icon": {
 					"light": "resources/light/edit.svg",
 					"dark": "resources/dark/edit.svg"
@@ -125,7 +123,7 @@
 			{
 				"command": "qservers.deleteEntry",
 				"title": "Delete q Server",
-				"category": "kdb+/q ext",
+				"category": "connect-kdb-q-dev",
 				"icon": {
 					"light": "resources/light/trash.svg",
 					"dark": "resources/dark/trash.svg"
@@ -134,27 +132,27 @@
 			{
 				"command": "qservers.queryCurrentLine",
 				"title": "Query current line",
-				"category": "kdb+/q ext"
+				"category": "connect-kdb-q-dev"
 			},
 			{
 				"command": "qservers.querySelection",
 				"title": "Query current selection",
-				"category": "kdb+/q ext"
+				"category": "connect-kdb-q-dev"
 			},
 			{
 				"command": "qservers.toggleMode",
 				"title": "Toggle query mode",
-				"category": "kdb+/q ext"
+				"category": "connect-kdb-q-dev"
 			},
 			{
 				"command": "queryview.start",
 				"title": "Start Query Result View",
-				"category": "kdb+/q ext"
+				"category": "connect-kdb-q-dev"
 			},
 			{
 				"command": "queryconsole.start",
 				"title": "Start Query Console Output Channel",
-				"category": "kdb+/q ext"
+				"category": "connect-kdb-q-dev"
 			}
 		],
 		"menus": {
@@ -186,11 +184,11 @@
 		"keybindings": [
 			{
 				"command": "qservers.queryCurrentLine",
-				"key": "ctrl+q"
+				"key": "ctrl+enter"
 			},
 			{
 				"command": "qservers.querySelection",
-				"key": "ctrl+r"
+				"key": "ctrl+e"
 			}
 		]
 	},
@@ -208,10 +206,5 @@
 	},
 	"dependencies": {
 		"node-q": "^2.5.0"
-	},
-	"__metadata": {
-		"id": "60c9939c-3592-42c0-832a-a3c4f2101cfd",
-		"publisherId": "35328b94-6af1-4ad8-91cb-d1cda95c9d40",
-		"publisherDisplayName": "jshinonome"
 	}
 }
