@@ -1,8 +1,8 @@
 {
 	"name": "learn-vscode-q",
 	"displayName": "connect-kdb-q-dev",
-	"description": "q language support for Visual Studio Code",
-	"version": "0.0.2",
+	"description": "personal study on jshinonome's 'kdb+/q' ext extension",
+	"version": "0.0.3",
 	"homepage": "https://github.com/cheduo/learn-vscode-q",
 	"publisher": "chenduo",
 	"license": "MIT",
