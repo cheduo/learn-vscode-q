@@ -32,6 +32,7 @@ export class QueryConsole {
 
     public append(output: string | string[]): void {
         this._console.clear();
+        this._console.appendLine('========== cut line ==========');
         if (Array.isArray(output)) {
             output.forEach(o => this._console.appendLine(o));
         } else {
