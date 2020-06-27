@@ -1,6 +1,8 @@
 # q for Visual Studio Code
 This package is just for personal study on jshinonome's excellent extension vscode-q. Following is the original documentation :
 
+[Original git](https://github.com/jshinonome/vscode-q)
+
 [![](https://img.shields.io/visual-studio-marketplace/v/jshinonome.learn-vscode-q?color=blueviolet&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.learn-vscode-q)
 [![](https://vsmarketplacebadge.apphb.com/downloads/jshinonome.learn-vscode-q.svg?color=blue&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.learn-vscode-q)
 [![](https://vsmarketplacebadge.apphb.com/installs/jshinonome.learn-vscode-q.svg?color=success&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.learn-vscode-q)
