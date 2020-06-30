@@ -1,7 +1,7 @@
 # q for Visual Studio Code
 This package is just for personal study on jshinonome's vscode-q extension. Please download his official version :
 
-[KDB+/Q](https://marketplace.visualstudio.com/items?itemName=lwshang.q)
+[kdb+/q ext](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 
 ## Following is the original documentation
 
@@ -40,8 +40,8 @@ Highlight parameters for functions. There shouldn't be any space between `{` and
 Append space to `},],)` by formatting the file. Turn on `Editor: Format On Save` to automatically append space.
 
 ## Shortcuts
-- ctrl+q: query current line
-- ctrl+r: query selected line(s)
+- ctrl+enter: query current line
+- ctrl+e: query current line/query selected line(s)
 
 ## Packages
 Thanks to the following packages that makes this happen.

@@ -1,5 +1,8 @@
 # Change Log
 All notable changes to the "learn-vscode-q" extension will be documented in this file.
+## 0.0.9
+- FIX bug in readme, still have issue in node-q in query symbol list such as "`a`b`c"
+
 ## 0.0.8
 - add pending mode
 
