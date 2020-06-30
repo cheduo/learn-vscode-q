@@ -38,6 +38,6 @@ export class QueryConsole {
         } else {
             this._console.appendLine(output);
         }
-        this._console.show();
+        this._console.show(true);
     }
 }
