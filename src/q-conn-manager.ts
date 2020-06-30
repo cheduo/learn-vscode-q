@@ -90,9 +90,9 @@ export class QConnManager {
         }
     }
 
-    sync(query: string): void {
+    syncx(queryWrapper: string, query: string): void {
         if (this.activeConn) {
-            this.activeConn.k(QConnManager.queryWrapper, query,
+            this.activeConn.k(queryWrapper, query,
                 (err, res) => {
                     if (err) {
                         if (QConnManager.consoleMode) {
@@ -120,8 +120,16 @@ export class QConnManager {
                 }
             );
         } else {
-            window.showErrorMessage('No Active q Connection');
+            this.activeConnLabel?this.connect(this.activeConnLabel):window.showErrorMessage('No Active q Connection');
         }
+    }
+
+    sync(query: string): void {
+        this.syncx(QConnManager.queryWrapper, query);
+    }
+
+    sync0(query: string): void {
+        this.syncx("0", query);
     }
 
     loadCfg(): void {

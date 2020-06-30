@@ -11,7 +11,6 @@ let connStatusBar: StatusBarItem;
 let modeStatusBar: StatusBarItem;
 
 export function activate(context: ExtensionContext): void {
-
     // extra language configurations
     languages.setLanguageConfiguration('q', {
         onEnterRules: [
@@ -69,7 +68,6 @@ export function activate(context: ExtensionContext): void {
     updateModeStatus();
     modeStatusBar.show();
 
-
     commands.registerCommand(
         'qservers.updateStatusBar',
         name => updateConnStatus(name)
@@ -106,7 +104,6 @@ export function activate(context: ExtensionContext): void {
             ).then(value => {
                 if (value === 'Y') {
                     qServers.qConnManager.removeCfg(qConn.label);
-
                 }
             });
         });
@@ -131,7 +128,6 @@ export function activate(context: ExtensionContext): void {
             updateModeStatus();
             updateConnStatusColor();
         });
-
 
     context.subscriptions.push(
         commands.registerCommand('queryview.start', () => {
@@ -168,6 +164,27 @@ export function activate(context: ExtensionContext): void {
             );
             if (query) {
                 qServers.qConnManager.sync(query);
+            } else {
+                commands.executeCommand('qservers.queryCurrentLine');
+            }
+        })
+    );
+
+    context.subscriptions.push(
+        commands.registerCommand('qservers.querySelection0', () => {
+            const query = window.activeTextEditor?.document.getText(
+                new Range(window.activeTextEditor.selection.start, window.activeTextEditor.selection.end)
+            );
+            if (query) {
+                qServers.qConnManager.sync0(query);
+            } else {
+                const n = window.activeTextEditor?.selection.active.line;
+                if (n !== undefined) {
+                    const query = window.activeTextEditor?.document.lineAt(n).text;
+                    if (query) {
+                        qServers.qConnManager.sync0(query);
+                    }
+                }
             }
         })
     );

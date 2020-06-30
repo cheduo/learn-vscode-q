@@ -1,5 +1,8 @@
 # Change Log
 All notable changes to the "learn-vscode-q" extension will be documented in this file.
+## 0.0.7
+- suport 2 sync modes
+
 ## 0.0.6
 - but don't move cursor
 

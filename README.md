@@ -3,13 +3,13 @@ This package is just for personal study on jshinonome's vscode-q extension. Plea
 
 [KDB+/Q](https://marketplace.visualstudio.com/items?itemName=lwshang.q)
 
-Following is the original documentation :
+## Following is the original documentation
 
-[Original git](https://github.com/jshinonome/vscode-q)
+[Original Git](https://github.com/jshinonome/vscode-q)
 
-[![](https://img.shields.io/visual-studio-marketplace/v/jshinonome.learn-vscode-q?color=blueviolet&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.learn-vscode-q)
-[![](https://vsmarketplacebadge.apphb.com/downloads/jshinonome.learn-vscode-q.svg?color=blue&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.learn-vscode-q)
-[![](https://vsmarketplacebadge.apphb.com/installs/jshinonome.learn-vscode-q.svg?color=success&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.learn-vscode-q)
+[![](https://img.shields.io/visual-studio-marketplace/v/jshinonome.vscode-q?color=blueviolet&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
+[![](https://vsmarketplacebadge.apphb.com/downloads/jshinonome.vscode-q.svg?color=blue&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
+[![](https://vsmarketplacebadge.apphb.com/installs/jshinonome.vscode-q.svg?color=success&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 
 This extension adds syntaxes for the q language to VS Code.
 Recommend to use theme [dracula/visual-studio-code](https://marketplace.visualstudio.com/items?itemName=dracula-theme.theme-dracula)

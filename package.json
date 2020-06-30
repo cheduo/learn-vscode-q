@@ -189,6 +189,10 @@
 			{
 				"command": "qservers.querySelection",
 				"key": "ctrl+e"
+			},
+			{
+				"command": "qservers.querySelection0",
+				"key": "ctrl+shift+enter"
 			}
 		]
 	},
