@@ -1,7 +1,7 @@
 {
 	"name": "learn-vscode-q",
 	"displayName": "connect-kdb-q-dev",
-	"description": "personal study on jshinonome's 'kdb+/q ext' extension",
+	"description": "personal study on jshinonome's 'kdb+/q ext' extension, suggest to download his official one",
 	"version": "0.0.4",
 	"homepage": "https://github.com/cheduo/learn-vscode-q",
 	"publisher": "chenduo",

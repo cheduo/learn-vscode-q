@@ -1,24 +1,23 @@
-import { OutputChannel, window, Disposable } from 'vscode';
-
-export class QueryConsole {
-    public static current: QueryConsole | undefined;
-    public static readonly viewType = 'query-console';
-    private readonly _console: OutputChannel;
-    private _disposables: Disposable[] = [];
-    public static createOrShow(): void {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.QueryConsole = void 0;
+const vscode_1 = require("vscode");
+class QueryConsole {
+    constructor(console) {
+        this._disposables = [];
+        this._console = console;
+    }
+    static createOrShow() {
         if (QueryConsole.current) {
             QueryConsole.current._console.show(true);
-        } else {
-            const _console = window.createOutputChannel('q Console');
+        }
+        else {
+            const _console = vscode_1.window.createOutputChannel('q Console');
             _console.show(true);
             QueryConsole.current = new QueryConsole(_console);
         }
     }
-    private constructor(console: OutputChannel) {
-        this._console = console;
-    }
-
-    public dispose(): void {
+    dispose() {
         QueryConsole.current = undefined;
         // Clean up our resources
         this._console.dispose();
@@ -29,15 +28,18 @@ export class QueryConsole {
             }
         }
     }
-
-    public append(output: string | string[]): void {
+    append(output) {
         this._console.clear();
         this._console.appendLine('========== cut line ==========');
         if (Array.isArray(output)) {
             output.forEach(o => this._console.appendLine(o));
-        } else {
+        }
+        else {
             this._console.appendLine(output);
         }
         this._console.show();
     }
 }
+exports.QueryConsole = QueryConsole;
+QueryConsole.viewType = 'query-console';
+//# sourceMappingURL=query-console.js.map

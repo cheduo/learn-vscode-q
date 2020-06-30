@@ -1,5 +1,9 @@
 # q for Visual Studio Code
-This package is just for personal study on jshinonome's excellent extension vscode-q. Following is the original documentation :
+This package is just for personal study on jshinonome's vscode-q extension. Please download his official version :
+
+[KDB+/Q](https://marketplace.visualstudio.com/items?itemName=lwshang.q)
+
+Following is the original documentation :
 
 [Original git](https://github.com/jshinonome/vscode-q)
 
