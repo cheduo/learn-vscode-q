@@ -17,6 +17,7 @@ export class QConnManager {
     qCfg: QCfg[] = [];
     activeConn: q.Connection | undefined;
     activeConnLabel: string | undefined;
+    qConn: QConn | undefined;
     // exception: true|false
     // type: number
     // data: return
@@ -57,15 +58,15 @@ export class QConnManager {
 
     connect(label: string): void {
         try {
-            const qConn = this.getConn(label);
-            if (qConn) {
-                const conn = qConn.conn;
+            this.qConn = this.getConn(label);
+            if (this.qConn) {
+                const conn = this.qConn.conn;
                 if (conn) {
                     this.activeConn = conn;
                     this.activeConnLabel = label;
                     commands.executeCommand('qservers.updateStatusBar', label);
                 } else {
-                    q.connect(qConn,
+                    q.connect(this.qConn,
                         (err, conn) => {
                             if (err) window.showErrorMessage(err.message);
                             if (conn) {
@@ -76,7 +77,7 @@ export class QConnManager {
                                     // todo: remove connection, update status bar
                                     this.removeConn(label);
                                 });
-                                qConn?.setConn(conn);
+                                this.qConn?.setConn(conn);
                                 this.activeConn = conn;
                                 this.activeConnLabel = label;
                                 commands.executeCommand('qservers.updateStatusBar', label);
@@ -91,7 +92,12 @@ export class QConnManager {
     }
 
     syncx(queryWrapper: string, query: string): void {
-        if (this.activeConn) {
+        if (this.activeConn && this.qConn) {
+            if (this.qConn.pending) {
+                window.showErrorMessage(this.qConn.label + ' is still running ...');
+                return;
+            }
+            this.qConn.pending = true;
             this.activeConn.k(queryWrapper, query,
                 (err, res) => {
                     if (err) {
@@ -117,10 +123,13 @@ export class QConnManager {
                             QueryView.currentPanel?.update(res);
                         }
                     }
+                    if (this.qConn) {
+                        this.qConn.pending = false;
+                    }
                 }
             );
         } else {
-            this.activeConnLabel?this.connect(this.activeConnLabel):window.showErrorMessage('No Active q Connection');
+            this.activeConnLabel ? this.connect(this.activeConnLabel) : window.showErrorMessage('No Active q Connection');
         }
     }
 

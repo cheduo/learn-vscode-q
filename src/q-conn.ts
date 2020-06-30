@@ -11,6 +11,7 @@ export class QConn extends TreeItem {
     password: string;
     socketNoDelay: boolean;
     socketTimeout: number;
+    pending: boolean;
     conn?: q.Connection;
     command?: Command;
     constructor(cfg: QCfg) {
@@ -25,6 +26,7 @@ export class QConn extends TreeItem {
         this.password = ('password' in cfg) ? cfg['password'] : '';
         this.socketNoDelay = ('socketNoDelay' in cfg) ? cfg['socketNoDelay'] : false;
         this.socketTimeout = ('socketTimeout' in cfg) ? cfg['socketTimeout'] : 0;
+        this.pending = false;
         this.command = {
             command: 'qservers.connect',
             title: 'connect to q server',
