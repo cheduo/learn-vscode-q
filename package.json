@@ -184,15 +184,18 @@
 		"keybindings": [
 			{
 				"command": "qservers.queryCurrentLine",
-				"key": "ctrl+enter"
+				"key": "ctrl+enter",
+				"when": "editorTextFocus && editorLangId == 'q'"
 			},
 			{
 				"command": "qservers.querySelection",
-				"key": "ctrl+e"
+				"key": "ctrl+e",
+				"when": "editorTextFocus && editorLangId == 'q'"
 			},
 			{
 				"command": "qservers.querySelection0",
-				"key": "ctrl+shift+enter"
+				"key": "ctrl+shift+enter",
+				"when": "editorTextFocus && editorLangId == 'q'"
 			}
 		]
 	},
