@@ -50,7 +50,6 @@ export function activate(context: ExtensionContext): void {
                 if (line.text.match('^[)\\]}]')) {
                     textEdit.push(TextEdit.insert(line.range.start, ' '));
                 }
-
             }
             return textEdit;
         }
@@ -67,6 +66,11 @@ export function activate(context: ExtensionContext): void {
     context.subscriptions.push(modeStatusBar);
     updateModeStatus();
     modeStatusBar.show();
+
+    commands.registerCommand(
+        'qservers.toggleConnColor',
+        pending => toggleConnColor(pending)
+    );
 
     commands.registerCommand(
         'qservers.updateStatusBar',
@@ -204,31 +208,33 @@ export function activate(context: ExtensionContext): void {
             }
         });
     }
-
     context.subscriptions.push(semanticTokensProvider);
+}
 
+function toggleConnColor(pending: boolean | undefined) {
+    connStatusBar.color = pending ? 'red' : 'green';
 }
 
 function updateConnStatus(name: string | undefined) {
     if (name) {
         if (QConnManager.consoleMode) {
             connStatusBar.text = name.toUpperCase();
-            connStatusBar.color = '#FF79C6';
+            connStatusBar.color = 'green';
         } else {
             connStatusBar.text = name.toUpperCase();
-            connStatusBar.color = '#8BE9FD';
+            connStatusBar.color = 'green';
         }
     } else {
         connStatusBar.text = 'Disconnected';
-        connStatusBar.color = '#6272A4';
+        connStatusBar.color = 'grey';
     }
 }
 
 function updateConnStatusColor() {
     if (QConnManager.consoleMode) {
-        connStatusBar.color = '#FF79C6';
+        connStatusBar.color = 'green';
     } else {
-        connStatusBar.color = '#8BE9FD';
+        connStatusBar.color = 'green';
     }
 }
 

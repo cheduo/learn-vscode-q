@@ -1,5 +1,8 @@
 # Change Log
 All notable changes to the "learn-vscode-q" extension will be documented in this file.
+## 0.0.13
+- set color to red if pending else green
+
 ## 0.0.12
 - add switch server
 

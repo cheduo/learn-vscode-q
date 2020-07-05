@@ -106,6 +106,7 @@ export class QConnManager {
                 return;
             }
             this.qConn.pending = true;
+            commands.executeCommand('qservers.toggleConnColor', this.qConn.pending);
             this.activeConn.k(queryWrapper, query,
                 (err, res) => {
                     if (err) {
@@ -133,6 +134,7 @@ export class QConnManager {
                     }
                     if (this.qConn) {
                         this.qConn.pending = false;
+                        commands.executeCommand('qservers.toggleConnColor', this.qConn.pending);
                     }
                 }
             );
