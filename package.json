@@ -196,6 +196,11 @@
 				"command": "qservers.querySelection0",
 				"key": "ctrl+shift+enter",
 				"when": "editorTextFocus && editorLangId == 'q'"
+			},
+			{
+				"command": "qservers.switch",
+				"key": "alt+s",
+				"when": "editorLangId == 'q'"
 			}
 		]
 	},

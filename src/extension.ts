@@ -115,6 +115,12 @@ export function activate(context: ExtensionContext): void {
         });
 
     commands.registerCommand(
+        'qservers.switch',
+        () => {
+            qServers.qConnManager.switch();
+        });
+
+    commands.registerCommand(
         'qservers.toggleMode',
         () => {
             QConnManager.toggleMode();
