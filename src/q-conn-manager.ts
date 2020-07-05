@@ -91,7 +91,7 @@ export class QConnManager {
         }
     }
 
-    syncx(queryWrapper: string, query: string): void {
+    async syncx(queryWrapper: string, query: string) {
         if (this.activeConn && this.qConn) {
             if (this.qConn.pending) {
                 window.showErrorMessage(this.qConn.label + ' is still running ...');
@@ -129,6 +129,12 @@ export class QConnManager {
                 }
             );
         } else {
+            if (!this.activeConnLabel) {
+                this.activeConnLabel = await window.showQuickPick(
+                    Array.from(this.qConnPool.keys()),
+                    { placeHolder: 'select a Q server' }
+                );
+            }
             this.activeConnLabel ? this.connect(this.activeConnLabel) : window.showErrorMessage('No Active q Connection');
         }
     }

@@ -1,5 +1,8 @@
 # Change Log
 All notable changes to the "learn-vscode-q" extension will be documented in this file.
+## 0.0.11
+- automatically pump out server list, if not connected
+
 ## 0.0.10
 - shortcut actived only for q language
 
