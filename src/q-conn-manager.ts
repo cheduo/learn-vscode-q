@@ -45,7 +45,7 @@ export class QConnManager {
 
     public static updateQueryWrapper(): void {
         if (QConnManager.consoleMode) {
-            QConnManager.queryWrapper = '{{.Q.trp[x;y;{x,"\n",.Q.sbt@(-4)_y}]}[{.Q.S[system"c";0j;value x]};x]}';
+            QConnManager.queryWrapper = '{{.Q.trp[x;y;{x,"\n",.Q.sbt@(-4)_y}]}[{.Q.S[system"c";0j;0 x]};x]}';
         } else {
             QConnManager.queryWrapper = '@[{r:value x;r:$[99h<>t:type r;r;98h=type key r;0!r;enlist r];`exception`type`data`cols!(0b;t;r;$[t in 98 99h;cols r;()])};;{`exception`data!(1b;x)}]';
         }
@@ -56,39 +56,44 @@ export class QConnManager {
         return this.qConnPool.get(label);
     }
 
-    connect(label: string): void {
-        try {
-            this.qConn = this.getConn(label);
-            if (this.qConn) {
-                const conn = this.qConn.conn;
-                if (conn) {
-                    this.activeConn = conn;
-                    this.activeConnLabel = label;
-                    commands.executeCommand('qservers.updateStatusBar', label);
-                } else {
-                    q.connect(this.qConn,
-                        (err, conn) => {
-                            if (err) window.showErrorMessage(err.message);
-                            if (conn) {
-                                conn.addListener("close", _hadError => {
-                                    if (_hadError) {
-                                        console.log("Error happened during closing connection");
-                                    }
-                                    // todo: remove connection, update status bar
-                                    this.removeConn(label);
-                                });
-                                this.qConn?.setConn(conn);
-                                this.activeConn = conn;
-                                this.activeConnLabel = label;
-                                commands.executeCommand('qservers.updateStatusBar', label);
+    connect(label: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            try {
+                this.qConn = this.getConn(label);
+                if (this.qConn) {
+                    const conn = this.qConn.conn;
+                    if (conn) {
+                        this.activeConn = conn;
+                        this.activeConnLabel = label;
+                        commands.executeCommand('qservers.updateStatusBar', label);
+                        resolve();
+                    } else {
+                        q.connect(this.qConn,
+                            (err, conn) => {
+                                if (err) window.showErrorMessage(err.message);
+                                if (conn) {
+                                    conn.addListener("close", _hadError => {
+                                        if (_hadError) {
+                                            console.log("Error happened during closing connection");
+                                        }
+                                        // todo: remove connection, update status bar
+                                        this.removeConn(label);
+                                    });
+                                    this.qConn?.setConn(conn);
+                                    this.activeConn = conn;
+                                    this.activeConnLabel = label;
+                                    commands.executeCommand('qservers.updateStatusBar', label);
+                                }
+                                resolve();
                             }
-                        }
-                    );
+                        );
+                    }
                 }
+            } catch (error) {
+                window.showErrorMessage(`Failed to connect to '${label}', please check q-server-cfg.json`);
+                resolve();
             }
-        } catch (error) {
-            window.showErrorMessage(`Failed to connect to '${label}', please check q-server-cfg.json`);
-        }
+        })
     }
 
     async switch() {
@@ -96,10 +101,13 @@ export class QConnManager {
             Array.from(this.qConnPool.keys()),
             { placeHolder: 'select a Q server' }
         );
-        this.activeConnLabel ? this.connect(this.activeConnLabel) : window.showErrorMessage('No Active q Connection');
+        this.activeConnLabel ? await this.connect(this.activeConnLabel) : window.showErrorMessage('No Active q Connection');
     }
 
     async syncx(queryWrapper: string, query: string) {
+        if (!this.activeConn || !this.qConn) {
+            this.activeConnLabel ? await this.connect(this.activeConnLabel) : await this.switch();
+        }
         if (this.activeConn && this.qConn) {
             if (this.qConn.pending) {
                 window.showErrorMessage(this.qConn.label + ' is still running ...');
@@ -138,8 +146,6 @@ export class QConnManager {
                     }
                 }
             );
-        } else {
-            this.activeConnLabel ? this.connect(this.activeConnLabel) : this.switch();
         }
     }
 
