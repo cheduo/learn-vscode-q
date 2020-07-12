@@ -1,5 +1,8 @@
 # Change Log
 All notable changes to the "learn-vscode-q" extension will be documented in this file.
+## 0.0.14
+- move to top view and execute after connection
+
 ## 0.0.13
 - set color to red if pending else green
 
