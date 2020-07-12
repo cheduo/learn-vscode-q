@@ -1,5 +1,4 @@
-import { OutputChannel, window, Disposable } from 'vscode';
-
+import { OutputChannel, window, Disposable, commands } from 'vscode';
 export class QueryConsole {
     public static current: QueryConsole | undefined;
     public static readonly viewType = 'query-console';
@@ -39,5 +38,6 @@ export class QueryConsole {
             this._console.appendLine(output);
         }
         this._console.show(true);
+        commands.executeCommand('cursorMove', 'viewPortTop');
     }
 }

@@ -51,7 +51,6 @@ export class QConnManager {
         }
     }
 
-
     getConn(label: string): QConn | undefined {
         return this.qConnPool.get(label);
     }
