@@ -114,7 +114,7 @@ export class QConnManager {
             }
             this.qConn.pending = true;
             commands.executeCommand('qservers.toggleConnColor', this.qConn.pending);
-            this.activeConn.k(queryWrapper, query,
+            this.activeConn.k(queryWrapper, ' ' + query,
                 (err, res) => {
                     if (err) {
                         if (QConnManager.consoleMode) {
