@@ -38,6 +38,6 @@ export class QueryConsole {
             this._console.appendLine(output);
         }
         this._console.show(true);
-        commands.executeCommand('cursorMove', 'viewPortTop');
+        // commands.executeCommand('workbench.action.terminal.scrollToTop');
     }
 }

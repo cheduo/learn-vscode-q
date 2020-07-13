@@ -29,15 +29,15 @@ export function activate(context: ExtensionContext): void {
                 action: {
                     indentAction: IndentAction.Outdent
                 }
-            },
-            {
-                // eslint-disable-next-line no-useless-escape
-                beforeText: /^\/.*$/,
-                action: {
-                    indentAction: IndentAction.None,
-                    appendText: '/ '
-                }
             }
+            // {
+            //     // eslint-disable-next-line no-useless-escape
+            //     beforeText: /^\/.*$/,
+            //     action: {
+            //         indentAction: IndentAction.None,
+            //         appendText: '/ '
+            //     }
+            // }
         ]
     });
 
