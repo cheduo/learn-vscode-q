@@ -6,10 +6,10 @@ export class QueryConsole {
     private _disposables: Disposable[] = [];
     public static createOrShow(): void {
         if (QueryConsole.current) {
-            QueryConsole.current._console.show(true);
+            // QueryConsole.current._console.show(true);
         } else {
             const _console = window.createOutputChannel('q Console');
-            _console.show(true);
+            // _console.show(true);
             QueryConsole.current = new QueryConsole(_console);
         }
     }
@@ -33,7 +33,15 @@ export class QueryConsole {
         this._console.clear();
         this._console.appendLine('========== cut line ==========');
         if (Array.isArray(output)) {
-            output.forEach(o => this._console.appendLine(o));
+            // could change parameter: 300
+            let max_row = 300;
+            max_row += 3;
+            if (output.length >= max_row) {
+                output.slice(0, max_row).forEach(o => this._console.appendLine(o));
+                this._console.appendLine("...");
+            } else {
+                output.forEach(o => this._console.appendLine(o));
+            }
         } else {
             this._console.appendLine(output);
         }

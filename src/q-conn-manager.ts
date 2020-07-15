@@ -114,7 +114,7 @@ export class QConnManager {
             }
             this.qConn.pending = true;
             commands.executeCommand('qservers.toggleConnColor', this.qConn.pending);
-            this.activeConn.k(queryWrapper, ' ' + query,
+            this.activeConn.k(queryWrapper, query[0] == '`' ? ' ' + query : query,
                 (err, res) => {
                     if (err) {
                         if (QConnManager.consoleMode) {
@@ -135,7 +135,7 @@ export class QConnManager {
                             commands.executeCommand('queryconsole.start');
                             QueryConsole.current?.append(res);
                         } else {
-                            commands.executeCommand('queryview.start');
+                            commands.executeCommand('queryview.start')
                             QueryView.currentPanel?.update(res);
                         }
                     }
