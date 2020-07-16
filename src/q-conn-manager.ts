@@ -45,9 +45,9 @@ export class QConnManager {
 
     public static updateQueryWrapper(): void {
         if (QConnManager.consoleMode) {
-            QConnManager.queryWrapper = '{{.Q.trp[x;y;{x,"\n",.Q.sbt@(-4)_y}]}[{.Q.S[system"c";0j;.z.qo:0 x]};x]}';
+            QConnManager.queryWrapper = '{{.Q.trp[x;y;{x,"\n",.Q.sbt@(-4)_y}]}[{.Q.S[system"c";0j;.d0.z.res:0 x]};x]}';
         } else {
-            QConnManager.queryWrapper = '@[{r:.z.qo:value x;r:$[99h<>t:type r;r;98h=type key r;0!r;enlist r];`exception`type`data`cols!(0b;t;r;$[t in 98 99h;cols r;()])};;{`exception`data!(1b;x)}]';
+            QConnManager.queryWrapper = '@[{r:.d0.z.res:value x;r:$[99h<>t:type r;r;98h=type key r;0!r;enlist r];`exception`type`data`cols!(0b;t;r;$[t in 98 99h;cols r;()])};;{`exception`data!(1b;x)}]';
         }
     }
 

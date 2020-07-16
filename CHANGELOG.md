@@ -1,5 +1,8 @@
 # Change Log
 All notable changes to the "learn-vscode-q" extension will be documented in this file.
+## 0.0.19
+- rename .z.qo to .d0.z.res
+
 ## 0.0.18
 - add q object .z.qo to store result
 
