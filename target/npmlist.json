@@ -1,1 +1,1 @@
-{"name":"learn-vscode-q","version":"0.0.9","dependencies":{"node-q":{"version":"2.5.0","dependencies":{"buffer-indexof-polyfill":{"version":"1.0.1"},"long":{"version":"3.0.3"},"node-uuid":{"version":"1.4.7"}}}}}
+{"name":"learn-vscode-q","version":"0.0.18","dependencies":{"node-q":{"version":"2.5.0","dependencies":{"buffer-indexof-polyfill":{"version":"1.0.1"},"long":{"version":"3.0.3"},"node-uuid":{"version":"1.4.7"}}}}}

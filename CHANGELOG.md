@@ -1,5 +1,8 @@
 # Change Log
 All notable changes to the "learn-vscode-q" extension will be documented in this file.
+## 0.0.20
+- add more personal key words
+
 ## 0.0.19
 - rename .z.qo to .d0.z.res
 
