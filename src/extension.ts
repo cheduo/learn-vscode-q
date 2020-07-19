@@ -6,6 +6,7 @@ import { qCfgInput } from './q-cfg-input';
 import { QueryConsole } from './query-console';
 import { QConnManager } from './q-conn-manager';
 import { semanticTokensProvider } from './q-semantic-token';
+import { MODE, QDocumentRangeFormatter } from './q-formatter';
 
 let connStatusBar: StatusBarItem;
 let modeStatusBar: StatusBarItem;
@@ -41,20 +42,22 @@ export function activate(context: ExtensionContext): void {
         ]
     });
 
-    // append space to start [,(,{
-    languages.registerDocumentFormattingEditProvider('q', {
-        provideDocumentFormattingEdits(document: TextDocument): TextEdit[] {
-            const textEdit: TextEdit[] = [];
-            for (let i = 0; i < document.lineCount; i++) {
-                const line = document.lineAt(i);
-                if (line.text.match('^[)\\]}]')) {
-                    textEdit.push(TextEdit.insert(line.range.start, ' '));
-                }
-            }
-            return textEdit;
-        }
-    });
-
+    const formatter = new QDocumentRangeFormatter();
+    context.subscriptions.push(languages.registerDocumentFormattingEditProvider(MODE, formatter));
+    context.subscriptions.push(languages.registerDocumentRangeFormattingEditProvider(MODE, formatter));
+    // // append space to start [,(,{
+    // languages.registerDocumentFormattingEditProvider('q', {
+    //     provideDocumentFormattingEdits(document: TextDocument): TextEdit[] {
+    //         const textEdit: TextEdit[] = [];
+    //         for (let i = 0; i < document.lineCount; i++) {
+    //             const line = document.lineAt(i);
+    //             if (line.text.match('^[)\\]}]')) {
+    //                 textEdit.push(TextEdit.insert(line.range.start, ' '));
+    //             }
+    //         }
+    //         return textEdit;
+    //     }
+    // });
     // status bar
     connStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 99);
     context.subscriptions.push(connStatusBar);
