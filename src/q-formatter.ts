@@ -23,8 +23,8 @@ class QFormatter {
         from = eol==EndOfLine.LF ? /[ \t]+(?=\n)/g : /[ \t]+(?=\r\n)/g;
         formatted = formatted.replace(from,'');
         // remove extra end of line space
-        from = eol==EndOfLine.LF ? /(\n){3,}/g : /(\r\n){3,}/g;
-        formatted = formatted.replace(from,'$1$1');
+        from = eol==EndOfLine.LF ? /(\n){4,}/g : /(\r\n){4,}/g;
+        formatted = formatted.replace(from,'$1$1$1');
         return formatted;
     }
 }
