@@ -1,44 +1,94 @@
-import { TextDocument, Range, TextEdit, DocumentFormattingEditProvider, FormattingOptions, CancellationToken, ProviderResult, EndOfLine} from "vscode";
-const fullRange = (doc: TextDocument) => doc.validateRange(new Range(0, 0, Number.MAX_VALUE, Number.MAX_VALUE));
-export const MODE = { language: 'q' };
+import {
+	TextDocument,
+	Range,
+	TextEdit,
+	DocumentFormattingEditProvider,
+	FormattingOptions,
+	CancellationToken,
+	ProviderResult,
+	EndOfLine,
+} from "vscode";
+const fullRange = (doc: TextDocument) =>
+	doc.validateRange(new Range(0, 0, Number.MAX_VALUE, Number.MAX_VALUE));
+export const MODE = { language: "q" };
 class QFormatter {
-    // constructor() {
-    // }
-    formatDocument(document: TextDocument, range: Range): ProviderResult<TextEdit[]> {
-        let textEdit : TextEdit[] = [];
-        let content = document.getText(range);
-        let formatted = this.format(content, document.eol);
-        // content = content.replace(/\n/g,'');
-        textEdit.push(new TextEdit(range, formatted));
-        return textEdit;
-    }
+	formatDocument(
+		document: TextDocument,
+		range: Range
+	): ProviderResult<TextEdit[]> {
+		let textEdit: TextEdit[] = [];
+		range = new Range(range.start.line, 0, range.end.line, Number.MAX_VALUE);
+		let content = document.getText(range);
+		let formatted = this.format(content, document.eol);
+		// content = content.replace(/\n/g,'');
+		textEdit.push(new TextEdit(range, formatted));
+		return textEdit;
+	}
 
-    format(content: string, eol: EndOfLine): string {
-        // add extra space before )\]}
-        let formatted = content.replace(/(^[)\\\]}].*)/,' $1');
-        formatted = content.replace(/(^[)\\\]}].*)/,' $1');
-        let from = eol==EndOfLine.LF ? /(?<=\n)([)\\\]}].*)/g : /(?<=\r\n)([)\\\]}].*)/g;
-        formatted = formatted.replace(from,' $1');
-        // remove extra end of line space
-        from = eol==EndOfLine.LF ? /[ \t]+(?=\n)/g : /[ \t]+(?=\r\n)/g;
-        formatted = formatted.replace(from,'');
-        // remove extra end of line space
-        from = eol==EndOfLine.LF ? /(\n){4,}/g : /(\r\n){4,}/g;
-        formatted = formatted.replace(from,'$1$1$1');
-        return formatted;
-    }
+	format(content: string, eol: EndOfLine): string {
+		let eol_str: string = eol == EndOfLine.LF ? "\n" : "\r\n";
+		let from: RegExp;
+		let formatted: string;
+		formatted = this.add_heading_space(content.split(eol_str)).join(eol_str);
+		// add extra space before )\]}
+		from = new RegExp(`(?<=${eol_str})([)\\\]}].*)`, "g");
+		formatted = formatted.replace(from, " $1");
+		from = new RegExp(`(${eol_str}){4,}`, "g");
+		formatted = formatted.replace(from, "$1$1$1");
+		return formatted;
+	}
+
+	add_heading_space(lines: string[]): string[] {
+		let hspace = lines[0] ? lines[0].replace(/(^\s*).*/, "$1") : "";
+		let formatted_line: string;
+		let formatted_lines: string[] = [];
+		let n_curly_brackets: number = (hspace.match(/\t/g) || []).length;
+		let n_square_brackets: number = (hspace.match(/  /g) || []).length;
+		// let n_equal: number = 0;
+		for (let line of lines) {
+			formatted_line = line.trim();
+			formatted_lines.push(hspace + formatted_line);
+
+			formatted_line = formatted_line.split('\/')[0].trim(); //remove commend information
+			// formatted_line = formatted_line.split('\"')[0]; //remove string information
+			// n_equal += (formatted_line.match(/^[\w|\d]+\s*[!@#$%^&\*_\-\+\=,?]{0,1}:/g) || []).length;
+			// n_equal -= (formatted_line.match(/;$/g) || []).length;
+
+			n_curly_brackets += (formatted_line.match(/{/g) || []).length;
+			n_curly_brackets -= (formatted_line.match(/}/g) || []).length;
+			n_square_brackets += (formatted_line.match(/\[/g) || []).length;
+			n_square_brackets -= (formatted_line.match(/\]/g) || []).length;
+
+			n_curly_brackets = Math.max(0, n_curly_brackets);
+			n_square_brackets = Math.max(0, n_square_brackets);
+			// n_equal = Math.max(0, n_equal);
+			hspace  =
+				"\t".repeat(n_curly_brackets) +
+				"  ".repeat(n_square_brackets);
+		}
+		return formatted_lines;
+	}
 }
 
 export class QDocumentRangeFormatter implements DocumentFormattingEditProvider {
-    public formatter: QFormatter;
-    constructor() {
-        this.formatter = new QFormatter();
-    }
-    provideDocumentFormattingEdits(document: TextDocument, options: FormattingOptions, token: CancellationToken): ProviderResult<TextEdit[]> {
-        return this.formatter.formatDocument(document, fullRange(document));
-    }
-    // provideDocumentRangeFormattingEdits(document: TextDocument, range: Range) {
-    provideDocumentRangeFormattingEdits(document: TextDocument, range: Range, options: FormattingOptions, token: CancellationToken): ProviderResult<TextEdit[]> {
-        return this.formatter.formatDocument(document, range);
-    }
+	public formatter: QFormatter;
+	constructor() {
+		this.formatter = new QFormatter();
+	}
+	provideDocumentFormattingEdits(
+		document: TextDocument,
+		options: FormattingOptions,
+		token: CancellationToken
+	): ProviderResult<TextEdit[]> {
+		return this.formatter.formatDocument(document, fullRange(document));
+	}
+	// provideDocumentRangeFormattingEdits(document: TextDocument, range: Range) {
+	provideDocumentRangeFormattingEdits(
+		document: TextDocument,
+		range: Range,
+		options: FormattingOptions,
+		token: CancellationToken
+	): ProviderResult<TextEdit[]> {
+		return this.formatter.formatDocument(document, range);
+	}
 }
