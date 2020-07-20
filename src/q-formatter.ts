@@ -43,30 +43,42 @@ class QFormatter {
 		let formatted_line: string;
 		let formatted_lines: string[] = [];
 		let n_curly_brackets: number = (hspace.match(/\t/g) || []).length;
-		let n_square_brackets: number = (hspace.match(/  /g) || []).length;
+		let n_square_brackets: number = (hspace.match(/ /g) || []).length;
 		// let n_equal: number = 0;
 		for (let line of lines) {
 			formatted_line = line.trim();
+			if (formatted_line.match(/^\\/)) {
+				formatted_line = formatted_line.replace(/^\\\s*/, 'system \"');
+				formatted_line += '\";'
+			}
 			formatted_lines.push(hspace + formatted_line);
-
-			formatted_line = formatted_line.split('\/')[0].trim(); //remove commend information
+			// formatted_line = formatted_line.split('\/')[0].trim(); //remove commend information
 			// formatted_line = formatted_line.split('\"')[0]; //remove string information
 			// n_equal += (formatted_line.match(/^[\w|\d]+\s*[!@#$%^&\*_\-\+\=,?]{0,1}:/g) || []).length;
 			// n_equal -= (formatted_line.match(/;$/g) || []).length;
+			formatted_line = this.rm_comment_string(formatted_line);
 
 			n_curly_brackets += (formatted_line.match(/{/g) || []).length;
 			n_curly_brackets -= (formatted_line.match(/}/g) || []).length;
-			n_square_brackets += (formatted_line.match(/\[/g) || []).length;
-			n_square_brackets -= (formatted_line.match(/\]/g) || []).length;
+			n_square_brackets += 2 * (formatted_line.match(/\[/g) || []).length;
+			n_square_brackets -= 2 * (formatted_line.match(/\]/g) || []).length;
 
 			n_curly_brackets = Math.max(0, n_curly_brackets);
 			n_square_brackets = Math.max(0, n_square_brackets);
 			// n_equal = Math.max(0, n_equal);
-			hspace  =
-				"\t".repeat(n_curly_brackets) +
-				"  ".repeat(n_square_brackets);
+			hspace =
+				'\t'.repeat(n_curly_brackets) +
+				' '.repeat(n_square_brackets);
 		}
 		return formatted_lines;
+	}
+
+	rm_comment_string(line: string): string {
+		if (line.match(/\s*\//)) {
+			return '';
+		}
+		line = line.replace(/\".*?\"/g, '');
+		return line.split(' \/')[0];
 	}
 }
 
