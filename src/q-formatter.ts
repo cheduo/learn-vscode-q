@@ -74,7 +74,7 @@ class QFormatter {
 	}
 
 	rm_comment_string(line: string): string {
-		if (line.match(/\s*\//)) {
+		if (line.match(/^\s*\//)) {
 			return '';
 		}
 		line = line.replace(/\".*?\"/g, '');
