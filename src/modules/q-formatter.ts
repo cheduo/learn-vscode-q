@@ -58,17 +58,15 @@ class QFormatter {
 			// n_equal -= (formatted_line.match(/;$/g) || []).length;
 			formatted_line = this.rm_comment_string(formatted_line);
 
-			n_curly_brackets += (formatted_line.match(/{/g) || []).length;
-			n_curly_brackets -= (formatted_line.match(/}/g) || []).length;
+			n_curly_brackets += 4 * (formatted_line.match(/{/g) || []).length;
+			n_curly_brackets -= 4 * (formatted_line.match(/}/g) || []).length;
 			n_square_brackets += 2 * (formatted_line.match(/\[/g) || []).length;
 			n_square_brackets -= 2 * (formatted_line.match(/\]/g) || []).length;
 
 			n_curly_brackets = Math.max(0, n_curly_brackets);
 			n_square_brackets = Math.max(0, n_square_brackets);
 			// n_equal = Math.max(0, n_equal);
-			hspace =
-				'\t'.repeat(n_curly_brackets) +
-				' '.repeat(n_square_brackets);
+			hspace = ' '.repeat(n_curly_brackets + n_square_brackets);
 		}
 		return formatted_lines;
 	}

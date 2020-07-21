@@ -1,12 +1,16 @@
-import { window, ExtensionContext, languages, IndentAction, commands, WebviewPanel, Range, StatusBarItem, StatusBarAlignment, TextDocument, TextEdit } from 'vscode';
-import { QServerTreeProvider } from './q-server-tree';
-import { QConn } from './q-conn';
-import { QueryView } from './query-view';
-import { qCfgInput } from './q-cfg-input';
-import { QueryConsole } from './query-console';
-import { QConnManager } from './q-conn-manager';
-import { semanticTokensProvider } from './q-semantic-token';
-import { MODE, QDocumentRangeFormatter } from './q-formatter';
+import {
+    window, ExtensionContext, languages, IndentAction, commands, WebviewPanel,
+    Range, StatusBarItem, StatusBarAlignment, TextDocument, TextEdit, workspace
+} from 'vscode';
+import { QServerTreeProvider } from './modules/q-server-tree';
+import { QConn } from './modules/q-conn';
+import { QueryView } from './modules/query-view';
+import { qCfgInput } from './modules/q-cfg-input';
+import { QueryConsole } from './modules/query-console';
+import { QConnManager } from './modules/q-conn-manager';
+import { semanticTokensProvider } from './modules/q-semantic-token';
+import { MODE, QDocumentRangeFormatter } from './modules/q-formatter';
+import path = require('path');
 
 let connStatusBar: StatusBarItem;
 let modeStatusBar: StatusBarItem;
