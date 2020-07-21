@@ -1,6 +1,10 @@
 {
   "name": "q language",
   "scopeName": "source.q",
+  "fileTypes": [
+    "q",
+    "k"
+  ],
   "patterns": [
     {
       "include": "#comments"
