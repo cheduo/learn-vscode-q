@@ -2,7 +2,7 @@
 	"name": "learn-vscode-q",
 	"displayName": "connect-kdb-q-dev",
 	"description": "personal study on jshinonome's 'kdb+/q ext' extension, suggest to download his official one",
-	"version": "0.0.24",
+	"version": "0.0.25",
 	"homepage": "https://github.com/cheduo/learn-vscode-q",
 	"publisher": "chenduo",
 	"license": "MIT",
