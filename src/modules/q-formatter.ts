@@ -47,11 +47,15 @@ class QFormatter {
 		// let n_equal: number = 0;
 		for (let line of lines) {
 			formatted_line = line.trim();
+			formatted_line = formatted_line.replace(/{\s+\[/, "{[");
 			if (formatted_line.match(/^\\/)) {
-				formatted_line = formatted_line.replace(/^\\\s*/, 'system \"');
-				formatted_line += '\";'
+				formatted_line = formatted_line.replace(/^\\\s*/, 'system "');
+				formatted_line += '";';
 			}
-			formatted_lines.push(hspace + formatted_line);
+			formatted_lines.push(
+				formatted_line ? hspace + formatted_line : formatted_line
+			);
+
 			// formatted_line = formatted_line.split('\/')[0].trim(); //remove commend information
 			// formatted_line = formatted_line.split('\"')[0]; //remove string information
 			// n_equal += (formatted_line.match(/^[\w|\d]+\s*[!@#$%^&\*_\-\+\=,?]{0,1}:/g) || []).length;
@@ -66,17 +70,17 @@ class QFormatter {
 			n_curly_brackets = Math.max(0, n_curly_brackets);
 			n_square_brackets = Math.max(0, n_square_brackets);
 			// n_equal = Math.max(0, n_equal);
-			hspace = ' '.repeat(n_curly_brackets + n_square_brackets);
+			hspace = " ".repeat(n_curly_brackets + n_square_brackets);
 		}
 		return formatted_lines;
 	}
 
 	rm_comment_string(line: string): string {
 		if (line.match(/^\s*\//)) {
-			return '';
+			return "";
 		}
-		line = line.replace(/\".*?\"/g, '');
-		return line.split(' \/')[0];
+		line = line.replace(/\".*?\"/g, "");
+		return line.split(" /")[0];
 	}
 }
 
