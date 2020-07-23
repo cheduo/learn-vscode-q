@@ -12,6 +12,10 @@ import { semanticTokensProvider } from './modules/q-semantic-token';
 import { MODE, QDocumentRangeFormatter } from './modules/q-formatter';
 import path = require('path');
 
+import {
+    LanguageClient, LanguageClientOptions, ServerOptions, TransportKind
+} from 'vscode-languageclient';
+
 let connStatusBar: StatusBarItem;
 let modeStatusBar: StatusBarItem;
 
@@ -216,6 +220,45 @@ export function activate(context: ExtensionContext): void {
         });
     }
     context.subscriptions.push(semanticTokensProvider);
+
+    const qls = path.join(context.extensionPath, 'out', 'server', 'start-server.js');
+
+    // The debug options for the server
+    // runs the server in Node's Inspector mode for debugging
+    const debugOptions = { execArgv: ['--nolazy', '--inspect=6009'] };
+
+    // If launched in debug mode then the debug server options are used
+    // Otherwise the run options are used
+    const serverOptions: ServerOptions = {
+        run: { module: qls, transport: TransportKind.ipc },
+        debug: {
+            module: qls,
+            transport: TransportKind.ipc,
+            options: debugOptions
+        }
+    };
+
+    // Options to control the language client
+    const clientOptions: LanguageClientOptions = {
+        // Register the server for plain text documents
+        documentSelector: [{ scheme: 'file', language: 'q' }],
+        synchronize: {
+            // Notify the server about file changes to '.clientrc files contained in the workspace
+            fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
+        }
+    };
+
+    // Create the language client and start the client.
+    const client = new LanguageClient(
+        'qLangServer',
+        'q Language Server',
+        serverOptions,
+        clientOptions
+    );
+
+    // Push the disposable to the context's subscriptions so that the
+    // client can be deactivated on extension deactivation
+    context.subscriptions.push(client.start());
 }
 
 function toggleConnColor(pending: boolean | undefined) {
