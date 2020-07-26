@@ -1,5 +1,8 @@
 # Change Log
 All notable changes to the "learn-vscode-q" extension will be documented in this file.
+## 0.0.27
+- add new key-binding
+
 ## 0.0.26
 - better status bar display
 

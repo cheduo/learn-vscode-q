@@ -206,6 +206,11 @@
 				"command": "qservers.reconnect",
 				"key": "alt+r",
 				"when": "editorLangId == 'q'"
+			},
+			{
+				"command": "editor.action.formatSelection",
+				"key": "ctrl+l",
+				"when": "editorHasDocumentSelectionFormattingProvider && editorHasDocumentSelectionFormattingProvider && editorTextFocus && && editorLangId == 'q'"
 			}
 		],
 		"configuration": {
