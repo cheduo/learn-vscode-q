@@ -4,7 +4,6 @@ import { QCfg, QConnManager } from './q-conn-manager';
 
 export async function qCfgInput(qcfg: QCfg | undefined, requireUnique = true): Promise<QCfg> {
 
-
     async function collectInputs() {
         const state = qcfg ? qcfg :
             {

@@ -38,6 +38,14 @@ export class QConn extends TreeItem {
         this.conn = conn;
     }
 
+    resetConn(conn: q.Connection | undefined): void {
+        if (this.conn) {
+            this.conn.close(() => console.log("closed."));
+        }
+        this.conn = conn;
+        this.pending = false;
+    }
+
     get tooltip(): string {
         return `${this.host}:${this.port}`;
     }

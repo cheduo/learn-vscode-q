@@ -6,7 +6,7 @@ import * as fs from "fs";
 import { QConn } from "./q-conn";
 import { QueryView } from "./query-view";
 import { QueryConsole } from "./query-console";
-
+import { ConnStatus, ModeStatus } from './status-bar';
 const cfgDir = homedir() + '/.vscode/';
 const cfgPath = cfgDir + 'q-server-cfg.json';
 
@@ -18,6 +18,8 @@ export class QConnManager {
     activeConn: q.Connection | undefined;
     activeConnLabel: string | undefined;
     qConn: QConn | undefined;
+    public static connStatus: ConnStatus = new ConnStatus();
+    public static modeStatus: ModeStatus = new ModeStatus();
     // exception: true|false
     // type: number
     // data: return
@@ -40,6 +42,7 @@ export class QConnManager {
 
     public static toggleMode(): void {
         QConnManager.consoleMode = !QConnManager.consoleMode;
+        QConnManager.modeStatus.update(QConnManager.consoleMode);
         QConnManager.updateQueryWrapper();
     }
 
@@ -55,16 +58,24 @@ export class QConnManager {
         return this.qConnPool.get(label);
     }
 
-    connect(label: string): Promise<void> {
+    reconnect(): void {
+        if (this.activeConnLabel) {
+            this.connect(true, this.activeConnLabel);
+        } else {
+            this.switch();
+        }
+    }
+
+    connect(reset: boolean, label: string): Promise<void> {
         return new Promise((resolve, reject) => {
             try {
                 this.qConn = this.getConn(label);
                 if (this.qConn) {
                     const conn = this.qConn.conn;
-                    if (conn) {
+                    if (!reset && conn) {
                         this.activeConn = conn;
                         this.activeConnLabel = label;
-                        commands.executeCommand('qservers.updateStatusBar', label);
+                        QConnManager.connStatus.update(this.qConn);
                         resolve();
                     } else {
                         q.connect(this.qConn,
@@ -78,10 +89,10 @@ export class QConnManager {
                                         // todo: remove connection, update status bar
                                         this.removeConn(label);
                                     });
-                                    this.qConn?.setConn(conn);
+                                    reset ? this.qConn?.resetConn(conn) : this.qConn?.setConn(conn);
                                     this.activeConn = conn;
                                     this.activeConnLabel = label;
-                                    commands.executeCommand('qservers.updateStatusBar', label);
+                                    QConnManager.connStatus.update(this.qConn);
                                 }
                                 resolve();
                             }
@@ -100,12 +111,12 @@ export class QConnManager {
             Array.from(this.qConnPool.keys()),
             { placeHolder: 'select a Q server' }
         );
-        this.activeConnLabel ? await this.connect(this.activeConnLabel) : window.showErrorMessage('No Active q Connection');
+        this.activeConnLabel ? await this.connect(false, this.activeConnLabel) : window.showErrorMessage('No Active q Connection');
     }
 
     async syncx(queryWrapper: string, query: string) {
         if (!this.activeConn || !this.qConn) {
-            this.activeConnLabel ? await this.connect(this.activeConnLabel) : await this.switch();
+            this.activeConnLabel ? await this.connect(false, this.activeConnLabel) : await this.switch();
         }
         if (this.activeConn && this.qConn) {
             if (this.qConn.pending) {
@@ -113,35 +124,39 @@ export class QConnManager {
                 return;
             }
             this.qConn.pending = true;
-            commands.executeCommand('qservers.toggleConnColor', this.qConn.pending);
+            QConnManager.connStatus.update(this.qConn);
             this.activeConn.k(queryWrapper, query[0] == '`' ? ' ' + query : query,
-                (err, res) => {
+                (err: Error, res) => {
                     if (err) {
                         if (QConnManager.consoleMode) {
-                            commands.executeCommand('queryconsole.start');
-                            QueryConsole.current?.append(res);
+                            commands.executeCommand('queryconsole.start').then(
+                                () => QueryConsole.current?.append(err.message)
+                            )
                         } else {
-                            commands.executeCommand('queryview.start');
-                            QueryView.currentPanel?.update(
-                                {
-                                    exception: true,
-                                    data: err
-                                }
-                            );
+                            commands.executeCommand('queryview.start').then(
+                                () => QueryView.currentPanel?.update(
+                                    {
+                                        exception: true,
+                                        data: err
+                                    }
+                                )
+                            )
                         }
                     }
                     if (res) {
                         if (QConnManager.consoleMode) {
-                            commands.executeCommand('queryconsole.start');
-                            QueryConsole.current?.append(res);
+                            commands.executeCommand('queryconsole.start').then(
+                                () => QueryConsole.current?.append(res)
+                            )
                         } else {
-                            commands.executeCommand('queryview.start')
-                            QueryView.currentPanel?.update(res);
+                            commands.executeCommand('queryview.start').then(
+                                () => QueryView.currentPanel?.update(res)
+                            )
                         }
                     }
                     if (this.qConn) {
                         this.qConn.pending = false;
-                        commands.executeCommand('qservers.toggleConnColor', this.qConn.pending);
+                        QConnManager.connStatus.update(this.qConn);
                     }
                 }
             );
@@ -204,7 +219,7 @@ export class QConnManager {
         qConn?.setConn(undefined);
         if (this.activeConnLabel === label) {
             this.activeConn = undefined;
-            commands.executeCommand('qservers.updateStatusBar', undefined);
+            QConnManager.connStatus.update(undefined);
         }
         window.showWarningMessage(`Lost connection to ${label.toUpperCase()}`);
     }

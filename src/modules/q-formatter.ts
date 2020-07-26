@@ -11,6 +11,7 @@ import {
 const fullRange = (doc: TextDocument) =>
 	doc.validateRange(new Range(0, 0, Number.MAX_VALUE, Number.MAX_VALUE));
 export const MODE = { language: "q" };
+
 class QFormatter {
 	formatDocument(
 		document: TextDocument,

@@ -201,6 +201,11 @@
 				"command": "qservers.switch",
 				"key": "alt+s",
 				"when": "editorLangId == 'q'"
+			},
+			{
+				"command": "qservers.reconnect",
+				"key": "alt+r",
+				"when": "editorLangId == 'q'"
 			}
 		],
 		"configuration": {

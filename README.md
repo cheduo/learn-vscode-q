@@ -12,7 +12,7 @@ This package is just for personal study on jshinonome's vscode-q extension. Plea
 [![](https://vsmarketplacebadge.apphb.com/installs/jshinonome.vscode-q.svg?color=success&style=flat)](https://marketplace.visualstudio.com/items?itemName=jshinonome.vscode-q)
 
 This extension adds syntaxes for the q language to VS Code.
-Recommend to use theme [dracula/visual-studio-code](https://marketplace.visualstudio.com/items?itemName=dracula-theme.theme-dracula)
+Recommend to use theme [dracula/visual-studio-code](https://marketplace.visualstudio.com/items?itemName=dracula-theme.theme-dracula).
 See the [Changelog](https://github.com/cheduo/learn-vscode-q/blob/master/CHANGELOG.md) to know what has changed over the last few versions of this extension.
 
 ## Server Explorer

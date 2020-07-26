@@ -10,14 +10,12 @@ import { QueryConsole } from './modules/query-console';
 import { QConnManager } from './modules/q-conn-manager';
 import { semanticTokensProvider } from './modules/q-semantic-token';
 import { MODE, QDocumentRangeFormatter } from './modules/q-formatter';
+
 import path = require('path');
 
 import {
     LanguageClient, LanguageClientOptions, ServerOptions, TransportKind
 } from 'vscode-languageclient';
-
-let connStatusBar: StatusBarItem;
-let modeStatusBar: StatusBarItem;
 
 export function activate(context: ExtensionContext): void {
     // extra language configurations
@@ -67,26 +65,11 @@ export function activate(context: ExtensionContext): void {
     //     }
     // });
     // status bar
-    connStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 99);
-    context.subscriptions.push(connStatusBar);
-    updateConnStatus(undefined);
-    connStatusBar.show();
-
+    // connStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 99);
+    // context.subscriptions.push(connStatusBar);
+    // updateConnStatus(undefined);
+    // connStatusBar.show();
     // status bar
-    modeStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 100);
-    context.subscriptions.push(modeStatusBar);
-    updateModeStatus();
-    modeStatusBar.show();
-
-    commands.registerCommand(
-        'qservers.toggleConnColor',
-        pending => toggleConnColor(pending)
-    );
-
-    commands.registerCommand(
-        'qservers.updateStatusBar',
-        name => updateConnStatus(name)
-    );
 
     // q-server-explorer
     const qServers = new QServerTreeProvider();
@@ -126,7 +109,13 @@ export function activate(context: ExtensionContext): void {
     commands.registerCommand(
         'qservers.connect',
         label => {
-            qServers.qConnManager.connect(label);
+            qServers.qConnManager.connect(false, label);
+        });
+
+    commands.registerCommand(
+        'qservers.reconnect',
+        label => {
+            qServers.qConnManager.reconnect();
         });
 
     commands.registerCommand(
@@ -146,8 +135,8 @@ export function activate(context: ExtensionContext): void {
                 window.showInformationMessage('Switch to Query View Mode');
                 QueryConsole.current?.dispose();
             }
-            updateModeStatus();
-            updateConnStatusColor();
+            // updateModeStatus();
+            // updateConnStatusColor();
         });
 
     context.subscriptions.push(
@@ -260,43 +249,6 @@ export function activate(context: ExtensionContext): void {
         // Push the disposable to the context's subscriptions so that the
         // client can be deactivated on extension deactivation
         context.subscriptions.push(client.start());
-    }
-}
-
-function toggleConnColor(pending: boolean | undefined) {
-    connStatusBar.color = pending ? 'red' : 'green';
-}
-
-function updateConnStatus(name: string | undefined) {
-    if (name) {
-        if (QConnManager.consoleMode) {
-            connStatusBar.text = name.toUpperCase();
-            connStatusBar.color = 'green';
-        } else {
-            connStatusBar.text = name.toUpperCase();
-            connStatusBar.color = 'green';
-        }
-    } else {
-        connStatusBar.text = 'Disconnected';
-        connStatusBar.color = 'grey';
-    }
-}
-
-function updateConnStatusColor() {
-    if (QConnManager.consoleMode) {
-        connStatusBar.color = 'green';
-    } else {
-        connStatusBar.color = 'green';
-    }
-}
-
-function updateModeStatus() {
-    if (QConnManager.consoleMode) {
-        modeStatusBar.text = '$(debug-console)';
-        modeStatusBar.color = '#FF79C6';
-    } else {
-        modeStatusBar.text = '$(graph)';
-        modeStatusBar.color = '#8BE9FD';
     }
 }
 
