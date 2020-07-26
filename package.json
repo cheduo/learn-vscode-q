@@ -210,7 +210,7 @@
 			{
 				"command": "editor.action.formatSelection",
 				"key": "ctrl+l",
-				"when": "editorHasDocumentSelectionFormattingProvider && editorHasDocumentSelectionFormattingProvider && editorTextFocus && && editorLangId == 'q'"
+				"when": "editorTextFocus && editorLangId == 'q'"
 			}
 		],
 		"configuration": {

@@ -20,6 +20,10 @@ export class ConnStatus {
             this.connStatusBar.color = 'grey';
         }
     }
+
+    public dispose(): void {
+        this.connStatusBar.dispose();
+    }
 }
 
 export class ModeStatus {
@@ -40,5 +44,9 @@ export class ModeStatus {
             this.modeStatusBar.text = '$(graph)';
             this.modeStatusBar.color = '#8BE9FD';
         }
+    }
+
+    public dispose(): void {
+        this.modeStatusBar.dispose();
     }
 }

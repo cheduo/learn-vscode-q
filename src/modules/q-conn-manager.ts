@@ -223,6 +223,11 @@ export class QConnManager {
         }
         window.showWarningMessage(`Lost connection to ${label.toUpperCase()}`);
     }
+
+    public dispose(): void {
+        QConnManager.connStatus.dispose();
+        QConnManager.modeStatus.dispose();
+    }
 }
 
 export type QCfg = {

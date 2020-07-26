@@ -209,7 +209,9 @@ export function activate(context: ExtensionContext): void {
         });
     }
     context.subscriptions.push(semanticTokensProvider);
-
+    if (QConnManager.current) {
+        context.subscriptions.push(QConnManager.current);
+    }
     const qls = path.join(context.extensionPath, 'out', 'server', 'start-server.js');
 
     // The debug options for the server
