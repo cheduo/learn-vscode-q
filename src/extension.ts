@@ -227,38 +227,40 @@ export function activate(context: ExtensionContext): void {
     // runs the server in Node's Inspector mode for debugging
     const debugOptions = { execArgv: ['--nolazy', '--inspect=6009'] };
 
-    // If launched in debug mode then the debug server options are used
-    // Otherwise the run options are used
-    const serverOptions: ServerOptions = {
-        run: { module: qls, transport: TransportKind.ipc },
-        debug: {
-            module: qls,
-            transport: TransportKind.ipc,
-            options: debugOptions
-        }
-    };
+    if (false) {
+        // If launched in debug mode then the debug server options are used
+        // Otherwise the run options are used
+        const serverOptions: ServerOptions = {
+            run: { module: qls, transport: TransportKind.ipc },
+            debug: {
+                module: qls,
+                transport: TransportKind.ipc,
+                options: debugOptions
+            }
+        };
 
-    // Options to control the language client
-    const clientOptions: LanguageClientOptions = {
-        // Register the server for plain text documents
-        documentSelector: [{ scheme: 'file', language: 'q' }],
-        synchronize: {
-            // Notify the server about file changes to '.clientrc files contained in the workspace
-            fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
-        }
-    };
+        // Options to control the language client
+        const clientOptions: LanguageClientOptions = {
+            // Register the server for plain text documents
+            documentSelector: [{ scheme: 'file', language: 'q' }],
+            synchronize: {
+                // Notify the server about file changes to '.clientrc files contained in the workspace
+                fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
+            }
+        };
 
-    // Create the language client and start the client.
-    const client = new LanguageClient(
-        'qLangServer',
-        'q Language Server',
-        serverOptions,
-        clientOptions
-    );
+        // Create the language client and start the client.
+        const client = new LanguageClient(
+            'qLangServer',
+            'q Language Server',
+            serverOptions,
+            clientOptions
+        );
 
-    // Push the disposable to the context's subscriptions so that the
-    // client can be deactivated on extension deactivation
-    context.subscriptions.push(client.start());
+        // Push the disposable to the context's subscriptions so that the
+        // client can be deactivated on extension deactivation
+        context.subscriptions.push(client.start());
+    }
 }
 
 function toggleConnColor(pending: boolean | undefined) {
