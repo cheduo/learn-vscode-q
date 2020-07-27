@@ -1,5 +1,8 @@
 # Change Log
 All notable changes to the "learn-vscode-q" extension will be documented in this file.
+## 0.0.29
+- new comment
+
 ## 0.0.28
 - better dispose
 
@@ -84,5 +87,3 @@ All notable changes to the "learn-vscode-q" extension will be documented in this
 ## 0.0.1
 ### Added
 - Initial release
-
-### Removed
