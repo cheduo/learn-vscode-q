@@ -87,3 +87,5 @@ All notable changes to the "learn-vscode-q" extension will be documented in this
 ## 0.0.1
 ### Added
 - Initial release
+
+### Removed
