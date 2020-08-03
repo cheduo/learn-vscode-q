@@ -7,6 +7,7 @@ import { QConn } from "./q-conn";
 import { QueryView } from "./query-view";
 import { QueryConsole } from "./query-console";
 import { ConnStatus, ModeStatus } from './status-bar';
+import { KdbExplorerProvider } from './explorer';
 const cfgDir = homedir() + '/.vscode/';
 const cfgPath = cfgDir + 'q-server-cfg.json';
 
@@ -18,6 +19,13 @@ export class QConnManager {
     activeConn: q.Connection | undefined;
     activeConnLabel: string | undefined;
     qConn: QConn | undefined;
+    static explorerProvider: KdbExplorerProvider = new KdbExplorerProvider(null);
+    globals: any;
+    functions: string[] = [];
+    variables: string[] = [];
+    tables: string[] = [];
+    keywords: string[] = [];
+
     public static connStatus: ConnStatus = new ConnStatus();
     public static modeStatus: ModeStatus = new ModeStatus();
     // exception: true|false
@@ -52,6 +60,42 @@ export class QConnManager {
         } else {
             QConnManager.queryWrapper = '@[{r:.d0.z.res:value x;r:$[99h<>t:type r;r;98h=type key r;0!r;enlist r];`exception`type`data`cols!(0b;t;r;$[t in 98 99h;cols r;()])};;{`exception`data!(1b;x)}]';
         }
+    }
+
+    updateGlobals(result: any): void {
+        this.globals = result;
+
+        let entries: [string, any][] = Object.entries(this.globals);
+
+        this.functions = [];
+        this.tables = [];
+        this.variables = [];
+
+        entries.forEach(([key, value]) => {
+            // Append dot to key, replace null with empty string.
+            key = key === "null" ? "." : (key + ".");
+
+            let f = value[key + "Functions"];
+            let t = value[key + "Tables"];
+            let v = value[key + "Variables"];
+
+            // Stuff in global and .q namespace should be simplified to "".
+            key = (key === "." || key === ".q.") ? "" : key;
+
+            if (f instanceof Array) {
+                f.forEach((obj: any) => this.functions.push(`${key}${obj}`));
+            }
+
+            if (t instanceof Array) {
+                t.forEach((obj: any) => this.tables.push(`${key}${obj}`));
+            }
+
+            if (v instanceof Array) {
+                v = v.filter((x: any) => !t.includes(x));
+                v.forEach((obj: any) => this.variables.push(`${key}${obj}`));
+            }
+        });
+        QConnManager.explorerProvider.refresh(result);
     }
 
     getConn(label: string): QConn | undefined {
@@ -93,6 +137,24 @@ export class QConnManager {
                                     this.activeConn = conn;
                                     this.activeConnLabel = label;
                                     QConnManager.connStatus.update(this.qConn);
+
+                                    let globalQuery = "{[q] t:system\"T\";tm:@[{$[x>0;[system\"T \",string x;1b];0b]};0;{0b}];r:$[tm;@[0;(q;::);{[tm; t; msgs] if[tm;system\"T \",string t];'msgs}[tm;t]];@[q;::;{'x}]];if[tm;system\"T \",string t];r}{do[1000;2+2];{@[{.z.ide.ns.r1:x;:.z.ide.ns.r1};x;{r:y;:r}[;x]]}({:x!{![sv[`;] each x cross `Tables`Functions`Variables; system each \"afv\" cross enlist[\" \"] cross enlist string x]} each x} [{raze x,.z.s'[{x where{@[{1#get x};x;`]~1#.q}'[x]}` sv'x,'key x]}`]),(enlist `.z)!flip (`.z.Tables`.z.Functions`.z.Variables)!(enlist 0#`;enlist `ac`bm`exit`pc`pd`pg`ph`pi`pm`po`pp`ps`pw`vs`ts`s`wc`wo`ws;enlist `a`b`e`f`h`i`k`K`l`o`q`u`w`W`x`X`n`N`p`P`z`Z`t`T`d`D`c`zd)}";
+                                    conn.k(globalQuery, (err, result) => {
+                                        if (err) {
+                                            window.showErrorMessage(`Failed to retrieve kdb+ global variables: '${err.message}`);
+                                            return;
+                                        }
+                                        this.updateGlobals(result);
+                                    });
+                                    // Update reserved keywords upon successful connection.
+                                    let reservedQuery = ".Q.res union key .q";
+                                    conn.k(reservedQuery, (err, result) => {
+                                        if (err) {
+                                            window.showErrorMessage(`Failed to retrieve kdb+ reserved keywords: '${err.message}`);
+                                            return;
+                                        }
+                                        this.keywords = result;
+                                    });
                                 }
                                 resolve();
                             }

@@ -1,6 +1,6 @@
 import {
-    window, ExtensionContext, languages, IndentAction, commands, WebviewPanel,
-    Range, StatusBarItem, StatusBarAlignment, TextDocument, TextEdit, workspace
+    window, ExtensionContext, languages, IndentAction, commands, WebviewPanel, CompletionItem, CompletionItemKind,
+    Range, StatusBarItem, StatusBarAlignment, TextDocument, TextEdit, workspace, CancellationToken, Position
 } from 'vscode';
 import { QServerTreeProvider } from './modules/q-server-tree';
 import { QConn } from './modules/q-conn';
@@ -51,6 +51,39 @@ export function activate(context: ExtensionContext): void {
     const formatter = new QDocumentRangeFormatter();
     context.subscriptions.push(languages.registerDocumentFormattingEditProvider(MODE, formatter));
     context.subscriptions.push(languages.registerDocumentRangeFormattingEditProvider(MODE, formatter));
+    context.subscriptions.push(languages.registerCompletionItemProvider(MODE, {
+        provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken) {
+            let items: CompletionItem[] = [];
+            // TODO: Fix auto completion when cancelling completion and then retyping...
+            // VS Code doesn't seem to handle completion items with double dots too well.
+
+            // let line = document.lineAt(position.line).text;
+            // let leading = line.substring(0, position.character);
+
+            // let index = leading.length - 1;
+            // let c = leading[index];
+
+            // while (index >= 0 && (c === '.') || (c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+            // 	c = leading[--index];
+            // }
+            // Replace leading dot if there is any.
+            let getInsertText = (x: string) => {
+                if ((x.match(/\./g) || []).length > 1) {
+                    // if (x.startsWith(leading)) {
+                    // 	return x.substring(x.lastIndexOf('.') + 1);
+                    // }
+                    return x.substr(1);
+                }
+                return x;
+            };
+            qServers.qConnManager.keywords.forEach(x => items.push({ label: x, kind: CompletionItemKind.Keyword }));
+            qServers.qConnManager.functions.forEach(x => items.push({ label: x, insertText: getInsertText(x), kind: CompletionItemKind.Function }));
+            qServers.qConnManager.tables.forEach(x => items.push({ label: x, insertText: getInsertText(x), kind: CompletionItemKind.Value }));
+            qServers.qConnManager.variables.forEach(x => items.push({ label: x, insertText: getInsertText(x), kind: CompletionItemKind.Variable }));
+            return items;
+        }
+    }));
+
     // // append space to start [,(,{
     // languages.registerDocumentFormattingEditProvider('q', {
     //     provideDocumentFormattingEdits(document: TextDocument): TextEdit[] {
