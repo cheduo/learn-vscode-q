@@ -27,14 +27,14 @@
 	"icon": "icon.png",
 	"main": "./dist/extension.js",
 	"activationEvents": [
-		"onView:qservers",
-		"onLanguage:q",
 		"onCommand:qservers.refreshEntry",
 		"onCommand:qservers.addEntry",
 		"onCommand:qservers.editEntry",
 		"onCommand:qservers.deleteEntry",
 		"onCommand:qservers.queryCurrentLine",
 		"onCommand:qservers.querySelection",
+		"onView:qservers",
+		"onLanguage:q",
 		"onCommand:queryview.start"
 	],
 	"scripts": {

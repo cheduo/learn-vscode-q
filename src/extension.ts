@@ -1,7 +1,4 @@
-import {
-    window, ExtensionContext, languages, IndentAction, commands, WebviewPanel, CompletionItem, CompletionItemKind,
-    Range, StatusBarItem, StatusBarAlignment, TextDocument, TextEdit, workspace, CancellationToken, Position
-} from 'vscode';
+import * as vscode from 'vscode';
 import { QServerTreeProvider } from './modules/q-server-tree';
 import { QConn } from './modules/q-conn';
 import { QueryView } from './modules/query-view';
@@ -17,16 +14,17 @@ import {
     LanguageClient, LanguageClientOptions, ServerOptions, TransportKind
 } from 'vscode-languageclient';
 
-export function activate(context: ExtensionContext): void {
+export function activate(context: vscode.ExtensionContext): void {
     // extra language configurations
-    languages.setLanguageConfiguration('q', {
+    console.log('hello');
+    vscode.languages.setLanguageConfiguration(MODE.language, {
         onEnterRules: [
             {
                 // eslint-disable-next-line no-useless-escape
                 beforeText: /^(?!\s+).*[\(\[{].*$/,
                 afterText: /^[)}\]]/,
                 action: {
-                    indentAction: IndentAction.None,
+                    indentAction: vscode.IndentAction.None,
                     appendText: '\n '
                 }
             },
@@ -34,14 +32,14 @@ export function activate(context: ExtensionContext): void {
                 // eslint-disable-next-line no-useless-escape
                 beforeText: /^\s[)}\]];?$/,
                 action: {
-                    indentAction: IndentAction.Outdent
+                    indentAction: vscode.IndentAction.Outdent
                 }
             }
             // {
             //     // eslint-disable-next-line no-useless-escape
             //     beforeText: /^\/.*$/,
             //     action: {
-            //         indentAction: IndentAction.None,
+            //         vscode.IndentAction: vscode.IndentAction.None,
             //         appendText: '/ '
             //     }
             // }
@@ -49,16 +47,16 @@ export function activate(context: ExtensionContext): void {
     });
 
     const formatter = new QDocumentRangeFormatter();
-    context.subscriptions.push(languages.registerDocumentFormattingEditProvider(MODE, formatter));
-    context.subscriptions.push(languages.registerDocumentRangeFormattingEditProvider(MODE, formatter));
-    context.subscriptions.push(languages.registerCompletionItemProvider(MODE, {
-        provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken) {
-            let items: CompletionItem[] = [];
+    context.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(MODE, formatter));
+    context.subscriptions.push(vscode.languages.registerDocumentRangeFormattingEditProvider(MODE, formatter));
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider(MODE, {
+        provideCompletionItems(document: vscode.TextDocument, Position: vscode.Position, token: vscode.CancellationToken) {
+            let items: vscode.CompletionItem[] = [];
             // TODO: Fix auto completion when cancelling completion and then retyping...
             // VS Code doesn't seem to handle completion items with double dots too well.
 
-            // let line = document.lineAt(position.line).text;
-            // let leading = line.substring(0, position.character);
+            // let line = document.lineAt(vscode.Position.line).text;
+            // let leading = line.substring(0, vscode.Position.character);
 
             // let index = leading.length - 1;
             // let c = leading[index];
@@ -76,29 +74,29 @@ export function activate(context: ExtensionContext): void {
                 }
                 return x;
             };
-            qServers.qConnManager.keywords.forEach(x => items.push({ label: x, kind: CompletionItemKind.Keyword }));
-            qServers.qConnManager.functions.forEach(x => items.push({ label: x, insertText: getInsertText(x), kind: CompletionItemKind.Function }));
-            qServers.qConnManager.tables.forEach(x => items.push({ label: x, insertText: getInsertText(x), kind: CompletionItemKind.Value }));
-            qServers.qConnManager.variables.forEach(x => items.push({ label: x, insertText: getInsertText(x), kind: CompletionItemKind.Variable }));
+            qServers.qConnManager.keywords.forEach(x => items.push({ label: x, kind: vscode.CompletionItemKind.Keyword }));
+            qServers.qConnManager.functions.forEach(x => items.push({ label: x, insertText: getInsertText(x), kind: vscode.CompletionItemKind.Function }));
+            qServers.qConnManager.tables.forEach(x => items.push({ label: x, insertText: getInsertText(x), kind: vscode.CompletionItemKind.Value }));
+            qServers.qConnManager.variables.forEach(x => items.push({ label: x, insertText: getInsertText(x), kind: vscode.CompletionItemKind.Variable }));
             return items;
         }
     }));
 
     // // append space to start [,(,{
-    // languages.registerDocumentFormattingEditProvider('q', {
+    // vscode.languages.registerDocumentFormattingEditProvider('q', {
     //     provideDocumentFormattingEdits(document: TextDocument): TextEdit[] {
     //         const textEdit: TextEdit[] = [];
     //         for (let i = 0; i < document.lineCount; i++) {
     //             const line = document.lineAt(i);
     //             if (line.text.match('^[)\\]}]')) {
-    //                 textEdit.push(TextEdit.insert(line.range.start, ' '));
+    //                 textEdit.push(TextEdit.insert(line.vscode.Range.start, ' '));
     //             }
     //         }
     //         return textEdit;
     //     }
     // });
     // status bar
-    // connStatusBar = window.createStatusBarItem(StatusBarAlignment.Left, 99);
+    // connStatusBar = vscode.window.createStatusBarItem(StatusBarAlignment.Left, 99);
     // context.subscriptions.push(connStatusBar);
     // updateConnStatus(undefined);
     // connStatusBar.show();
@@ -106,20 +104,20 @@ export function activate(context: ExtensionContext): void {
 
     // q-server-explorer
     const qServers = new QServerTreeProvider();
-    window.registerTreeDataProvider('qservers', qServers);
+    vscode.window.registerTreeDataProvider('qservers', qServers);
 
-    commands.registerCommand(
+    vscode.commands.registerCommand(
         'qservers.refreshEntry', () => qServers.refresh());
 
     // q cfg input
-    commands.registerCommand(
+    vscode.commands.registerCommand(
         'qservers.addEntry',
         async () => {
             const qcfg = await qCfgInput(undefined);
             qServers.qConnManager.addCfg(qcfg);
         });
 
-    commands.registerCommand(
+    vscode.commands.registerCommand(
         'qservers.editEntry',
         async (qConn: QConn) => {
             const qcfg = await qCfgInput(qConn, false);
@@ -127,10 +125,10 @@ export function activate(context: ExtensionContext): void {
 
         });
 
-    commands.registerCommand(
+    vscode.commands.registerCommand(
         'qservers.deleteEntry',
         (qConn: QConn) => {
-            window.showInputBox(
+            vscode.window.showInputBox(
                 { prompt: `Confirm to Remove Server '${qConn.label}' (Y/n)` }
             ).then(value => {
                 if (value === 'Y') {
@@ -139,33 +137,33 @@ export function activate(context: ExtensionContext): void {
             });
         });
 
-    commands.registerCommand(
+    vscode.commands.registerCommand(
         'qservers.connect',
         label => {
             qServers.qConnManager.connect(false, label);
         });
 
-    commands.registerCommand(
+    vscode.commands.registerCommand(
         'qservers.reconnect',
         label => {
             qServers.qConnManager.reconnect();
         });
 
-    commands.registerCommand(
+    vscode.commands.registerCommand(
         'qservers.switch',
         () => {
             qServers.qConnManager.switch();
         });
 
-    commands.registerCommand(
+    vscode.commands.registerCommand(
         'qservers.toggleMode',
         () => {
             QConnManager.toggleMode();
             if (QConnManager.consoleMode) {
-                window.showInformationMessage('Switch to Query Console Mode');
+                vscode.window.showInformationMessage('Switch to Query Console Mode');
                 QueryView.currentPanel?.dispose();
             } else {
-                window.showInformationMessage('Switch to Query View Mode');
+                vscode.window.showInformationMessage('Switch to Query View Mode');
                 QueryConsole.current?.dispose();
             }
             // updateModeStatus();
@@ -173,7 +171,7 @@ export function activate(context: ExtensionContext): void {
         });
 
     context.subscriptions.push(
-        commands.registerCommand('queryview.start', () => {
+        vscode.commands.registerCommand('queryview.start', () => {
             if (QueryView.currentPanel === undefined) {
                 QueryView.createOrShow(context.extensionPath);
             }
@@ -181,7 +179,7 @@ export function activate(context: ExtensionContext): void {
     );
 
     context.subscriptions.push(
-        commands.registerCommand('queryconsole.start', () => {
+        vscode.commands.registerCommand('queryconsole.start', () => {
             if (QueryConsole.current === undefined) {
                 QueryConsole.createOrShow();
             }
@@ -189,10 +187,10 @@ export function activate(context: ExtensionContext): void {
     );
 
     context.subscriptions.push(
-        commands.registerCommand('qservers.queryCurrentLine', () => {
-            const n = window.activeTextEditor?.selection.active.line;
+        vscode.commands.registerCommand('qservers.queryCurrentLine', () => {
+            const n = vscode.window.activeTextEditor?.selection.active.line;
             if (n !== undefined) {
-                const query = window.activeTextEditor?.document.lineAt(n).text;
+                const query = vscode.window.activeTextEditor?.document.lineAt(n).text;
                 if (query) {
                     qServers.qConnManager.sync(query);
                 }
@@ -201,29 +199,29 @@ export function activate(context: ExtensionContext): void {
     );
 
     context.subscriptions.push(
-        commands.registerCommand('qservers.querySelection', () => {
-            const query = window.activeTextEditor?.document.getText(
-                new Range(window.activeTextEditor.selection.start, window.activeTextEditor.selection.end)
+        vscode.commands.registerCommand('qservers.querySelection', () => {
+            const query = vscode.window.activeTextEditor?.document.getText(
+                new vscode.Range(vscode.window.activeTextEditor.selection.start, vscode.window.activeTextEditor.selection.end)
             );
             if (query) {
                 qServers.qConnManager.sync(query);
             } else {
-                commands.executeCommand('qservers.queryCurrentLine');
+                vscode.commands.executeCommand('qservers.queryCurrentLine');
             }
         })
     );
 
     context.subscriptions.push(
-        commands.registerCommand('qservers.querySelection0', () => {
-            const query = window.activeTextEditor?.document.getText(
-                new Range(window.activeTextEditor.selection.start, window.activeTextEditor.selection.end)
+        vscode.commands.registerCommand('qservers.querySelection0', () => {
+            const query = vscode.window.activeTextEditor?.document.getText(
+                new vscode.Range(vscode.window.activeTextEditor.selection.start, vscode.window.activeTextEditor.selection.end)
             );
             if (query) {
                 qServers.qConnManager.sync0(query);
             } else {
-                const n = window.activeTextEditor?.selection.active.line;
+                const n = vscode.window.activeTextEditor?.selection.active.line;
                 if (n !== undefined) {
-                    const query = window.activeTextEditor?.document.lineAt(n).text;
+                    const query = vscode.window.activeTextEditor?.document.lineAt(n).text;
                     if (query) {
                         qServers.qConnManager.sync0(query);
                     }
@@ -232,12 +230,12 @@ export function activate(context: ExtensionContext): void {
         })
     );
 
-    if (window.registerWebviewPanelSerializer) {
+    if (vscode.window.registerWebviewPanelSerializer) {
         // Make sure we register a serializer in activation event
-        window.registerWebviewPanelSerializer(QueryView.viewType, {
+        vscode.window.registerWebviewPanelSerializer(QueryView.viewType, {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            async deserializeWebviewPanel(webviewPanel: WebviewPanel) {
-                QueryView.revive(webviewPanel, context.extensionPath);
+            async deserializeWebviewPanel(WebviewPanel: vscode.WebviewPanel) {
+                QueryView.revive(WebviewPanel, context.extensionPath);
             }
         });
     }
@@ -268,8 +266,8 @@ export function activate(context: ExtensionContext): void {
             // Register the server for plain text documents
             documentSelector: [{ scheme: 'file', language: 'q' }],
             synchronize: {
-                // Notify the server about file changes to '.clientrc files contained in the workspace
-                fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
+                // Notify the server about file changes to '.clientrc files contained in the vscode.workspace
+                fileEvents: vscode.workspace.createFileSystemWatcher('**/.clientrc')
             }
         };
 
