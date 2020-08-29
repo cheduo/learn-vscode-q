@@ -1,6 +1,6 @@
 # Change Log
 All notable changes to the "learn-vscode-q" extension will be documented in this file.
-## 0.0.33
+## 0.0.32
 - don't replace leading dot (part of namespace)
 
 ## 0.0.31
