@@ -2,7 +2,7 @@ import {window, StatusBarItem, StatusBarAlignment} from 'vscode';
 
 import { QConn } from "./q-conn";
 
-export class ConnStatus {
+class ConnStatus {
     // public static current: ConnStatus | undefined;
     connStatusBar: StatusBarItem;
     constructor() {
@@ -26,7 +26,8 @@ export class ConnStatus {
     }
 }
 
-export class ModeStatus {
+
+class ModeStatus {
     // public static current: ConnStatus | undefined;
     modeStatusBar: StatusBarItem;
     constructor() {
@@ -50,3 +51,6 @@ export class ModeStatus {
         this.modeStatusBar.dispose();
     }
 }
+
+export const connStatus: ConnStatus = new ConnStatus();
+export const modeStatus: ModeStatus = new ModeStatus();

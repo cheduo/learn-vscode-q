@@ -66,10 +66,7 @@ export function activate(context: vscode.ExtensionContext): void {
             // }
             // Replace leading dot if there is any.
             let getInsertText = (x: string) => {
-                if ((x.match(/\./g) || []).length > 1) {
-                    // if (x.startsWith(leading)) {
-                    // 	return x.substring(x.lastIndexOf('.') + 1);
-                    // }
+                if ((x.match(/(?<=.)\./g) || []).length > 1) {
                     return x.substr(1);
                 }
                 return x;

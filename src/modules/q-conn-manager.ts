@@ -6,7 +6,7 @@ import * as fs from "fs";
 import { QConn } from "./q-conn";
 import { QueryView } from "./query-view";
 import { QueryConsole } from "./query-console";
-import { ConnStatus, ModeStatus } from './status-bar';
+import { connStatus, modeStatus} from './status-bar';
 import { KdbExplorerProvider } from './explorer';
 const cfgDir = homedir() + '/.vscode/';
 const cfgPath = cfgDir + 'q-server-cfg.json';
@@ -26,8 +26,8 @@ export class QConnManager {
     tables: string[] = [];
     keywords: string[] = [];
 
-    public static connStatus: ConnStatus = new ConnStatus();
-    public static modeStatus: ModeStatus = new ModeStatus();
+    public static connStatus = connStatus;
+    public static modeStatus = modeStatus;
     // exception: true|false
     // type: number
     // data: return

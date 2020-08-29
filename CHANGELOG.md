@@ -1,5 +1,8 @@
 # Change Log
 All notable changes to the "learn-vscode-q" extension will be documented in this file.
+## 0.0.33
+- don't replace leading dot (part of namespace)
+
 ## 0.0.31
 - add auto-complete from [vscode-kdb-q](https://marketplace.visualstudio.com/items?itemName=xidaozu.vscode-kdb-q)
 
