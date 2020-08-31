@@ -66,9 +66,10 @@ export function activate(context: vscode.ExtensionContext): void {
             // }
             // Replace leading dot if there is any.
             let getInsertText = (x: string) => {
-                if ((x.match(/(?<=.)\./g) || []).length > 1) {
-                    return x.substr(1);
-                }
+                // never replace dot
+                // if ((x.match(/(?<=.)\./g) || []).length > 1) {
+                //     return x.substr(1);
+                // }
                 return x;
             };
             qServers.qConnManager.keywords.forEach(x => items.push({ label: x, kind: vscode.CompletionItemKind.Keyword }));
