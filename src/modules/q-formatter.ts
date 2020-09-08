@@ -46,8 +46,12 @@ class QFormatter {
 		let n_curly_brackets: number = (hspace.match(/\t/g) || []).length;
 		let n_square_brackets: number = (hspace.match(/ /g) || []).length;
 		// let n_equal: number = 0;
+		let prev_is_semicolon = true;
 		for (let line of lines) {
-			formatted_line = line.trim();
+			formatted_line = line.trimEnd();
+			if (prev_is_semicolon) {
+				formatted_line = formatted_line.trimStart();
+			}
 			formatted_line = formatted_line.replace(/{\s+\[/, "{[");
 			if (formatted_line.match(/^\\/)) {
 				formatted_line = formatted_line.replace(/^\\\s*/, 'system "');
@@ -62,7 +66,9 @@ class QFormatter {
 			// n_equal += (formatted_line.match(/^[\w|\d]+\s*[!@#$%^&\*_\-\+\=,?]{0,1}:/g) || []).length;
 			// n_equal -= (formatted_line.match(/;$/g) || []).length;
 			formatted_line = this.rm_comment_string(formatted_line);
-
+			if (formatted_line && !formatted_line.endsWith(";")) {
+				prev_is_semicolon = false;
+			}
 			n_curly_brackets += 4 * (formatted_line.match(/{/g) || []).length;
 			n_curly_brackets -= 4 * (formatted_line.match(/}/g) || []).length;
 			n_square_brackets += 2 * (formatted_line.match(/\[/g) || []).length;

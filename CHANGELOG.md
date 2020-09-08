@@ -1,5 +1,8 @@
 # Change Log
 All notable changes to the "learn-vscode-q" extension will be documented in this file.
+## 0.0.34
+- better format
+
 ## 0.0.33
 - never replace dot
 
