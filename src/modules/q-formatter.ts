@@ -40,11 +40,12 @@ class QFormatter {
 	}
 
 	add_heading_space(lines: string[]): string[] {
-		let hspace = lines[0] ? lines[0].replace(/(^\s*).*/, "$1") : "";
+		let hspace : string;
 		let formatted_line: string;
 		let formatted_lines: string[] = [];
-		let n_curly_brackets: number = (hspace.match(/\t/g) || []).length;
-		let n_square_brackets: number = (hspace.match(/ /g) || []).length;
+		let n_init = lines[0] ? (lines[0].match(/ /g) || []).length : 0;
+		let n_curly_brackets = 0;
+		let n_square_brackets = 0;
 		// let n_equal: number = 0;
 		let prev_is_semicolon = true;
 		let n_heading_space = 0;
@@ -61,7 +62,7 @@ class QFormatter {
 				formatted_line = formatted_line.replace(/^\\\s*/, 'system "');
 				formatted_line += '";';
 			}
-			hspace = " ".repeat(Math.max(0, n_curly_brackets + n_square_brackets + n_heading_space - n_remove_space));
+			hspace = " ".repeat(Math.max(0, n_init + n_curly_brackets + n_square_brackets + n_heading_space - n_remove_space));
 			formatted_lines.push(
 				formatted_line ? hspace + formatted_line : formatted_line
 			);
@@ -70,14 +71,13 @@ class QFormatter {
 			// n_equal += (formatted_line.match(/^[\w|\d]+\s*[!@#$%^&\*_\-\+\=,?]{0,1}:/g) || []).length;
 			// n_equal -= (formatted_line.match(/;$/g) || []).length;
 			formatted_line = this.rm_comment_string(formatted_line);
-			if (formatted_line && !formatted_line.endsWith(";")) {
+			if (formatted_line && !formatted_line.endsWith(";") && !formatted_line.match(/{|\[/)) {
 				prev_is_semicolon = false;
 			}
 			n_curly_brackets += 4 * (formatted_line.match(/{/g) || []).length;
 			n_curly_brackets -= 4 * (formatted_line.match(/}/g) || []).length;
 			n_square_brackets += 2 * (formatted_line.match(/\[/g) || []).length;
 			n_square_brackets -= 2 * (formatted_line.match(/\]/g) || []).length;
-
 			n_curly_brackets = Math.max(0, n_curly_brackets);
 			n_square_brackets = Math.max(0, n_square_brackets);
 		}
