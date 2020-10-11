@@ -43,7 +43,7 @@ class QFormatter {
 		let hspace : string;
 		let formatted_line: string;
 		let formatted_lines: string[] = [];
-		let n_init = lines[0] ? (lines[0].match(/ /g) || []).length : 0;
+		let n_init = lines[0].search(/\S/);
 		let n_curly_brackets = 0;
 		let n_square_brackets = 0;
 		// let n_equal: number = 0;
