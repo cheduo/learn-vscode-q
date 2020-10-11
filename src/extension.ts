@@ -16,7 +16,7 @@ import {
 
 export function activate(context: vscode.ExtensionContext): void {
     // extra language configurations
-    console.log('hello');
+    // console.log('hello');
     vscode.languages.setLanguageConfiguration(MODE.language, {
         onEnterRules: [
             {

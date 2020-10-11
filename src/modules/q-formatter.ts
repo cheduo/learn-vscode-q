@@ -47,20 +47,24 @@ class QFormatter {
 		let n_square_brackets: number = (hspace.match(/ /g) || []).length;
 		// let n_equal: number = 0;
 		let prev_is_semicolon = true;
+		let n_heading_space = 0;
+		let n_remove_space = 0;
 		for (let line of lines) {
 			formatted_line = line.trimEnd();
+			n_heading_space = formatted_line.search(/\S/);
+			formatted_line = formatted_line.trimStart();
 			if (prev_is_semicolon) {
-				formatted_line = formatted_line.trimStart();
+				n_remove_space = n_heading_space;
 			}
 			formatted_line = formatted_line.replace(/{\s+\[/, "{[");
 			if (formatted_line.match(/^\\/)) {
 				formatted_line = formatted_line.replace(/^\\\s*/, 'system "');
 				formatted_line += '";';
 			}
+			hspace = " ".repeat(Math.max(0, n_curly_brackets + n_square_brackets + n_heading_space - n_remove_space));
 			formatted_lines.push(
 				formatted_line ? hspace + formatted_line : formatted_line
 			);
-
 			// formatted_line = formatted_line.split('\/')[0].trim(); //remove commend information
 			// formatted_line = formatted_line.split('\"')[0]; //remove string information
 			// n_equal += (formatted_line.match(/^[\w|\d]+\s*[!@#$%^&\*_\-\+\=,?]{0,1}:/g) || []).length;
@@ -76,8 +80,6 @@ class QFormatter {
 
 			n_curly_brackets = Math.max(0, n_curly_brackets);
 			n_square_brackets = Math.max(0, n_square_brackets);
-			// n_equal = Math.max(0, n_equal);
-			hspace = " ".repeat(n_curly_brackets + n_square_brackets);
 		}
 		return formatted_lines;
 	}
