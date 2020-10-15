@@ -40,7 +40,7 @@ class QFormatter {
 	}
 
 	add_heading_space(lines: string[]): string[] {
-		let hspace : string;
+		let hspace: string;
 		let formatted_line: string;
 		let formatted_lines: string[] = [];
 		let n_init = lines[0].search(/\S/);
@@ -73,6 +73,8 @@ class QFormatter {
 			formatted_line = this.rm_comment_string(formatted_line);
 			if (formatted_line && !formatted_line.endsWith(";") && !formatted_line.match(/{|\[/)) {
 				prev_is_semicolon = false;
+			} else {
+				prev_is_semicolon = true;
 			}
 			n_curly_brackets += 4 * (formatted_line.match(/{/g) || []).length;
 			n_curly_brackets -= 4 * (formatted_line.match(/}/g) || []).length;
